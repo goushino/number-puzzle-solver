@@ -1,18 +1,18 @@
 module Parser
-( Parser (..)
-, char
-, digit
-, many0
-, many1
-, eos
-)
+  ( Parser (..),
+    char,
+    digit,
+    many0,
+    many1,
+    eos,
+  )
 where
 
 import Control.Applicative
-import Data.Char
 import Data.Bifunctor
+import Data.Char
 
-newtype Parser s a = Parser { runParser :: s -> Maybe (a, s) }
+newtype Parser s a = Parser {runParser :: s -> Maybe (a, s)}
 
 instance Functor (Parser s) where
   fmap f (Parser p) = Parser $ \s -> fmap (first f) (p s)
@@ -35,7 +35,7 @@ predHead p = Parser $ \s ->
     else Nothing
 
 char :: Char -> Parser String Char
-char c = predHead (==c)
+char c = predHead (== c)
 
 digit :: Parser String Char
 digit = predHead isDigit

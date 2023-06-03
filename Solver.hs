@@ -1,20 +1,23 @@
 module Solver
-( Expr(..)
-, parse
-, isNatural
-, mkAns
-, calculate
-) where
+  ( Expr (..),
+    parse,
+    isNatural,
+    mkAns,
+    calculate,
+  )
+where
 
-import Data.Ratio
 import Control.Applicative
+import Data.Ratio
 import Parser
 
-data Expr = Add Expr Expr
-          | Sub Expr Expr
-          | Mul Expr Expr
-          | Div Expr Expr
-          | Lit Rational deriving ( Eq, Show )
+data Expr
+  = Add Expr Expr
+  | Sub Expr Expr
+  | Mul Expr Expr
+  | Div Expr Expr
+  | Lit Rational
+  deriving (Eq, Show)
 
 type Ans = (String, Rational)
 
@@ -26,10 +29,10 @@ eval (Mul l r) = eval l * eval r
 eval (Div l r) = eval l / eval r
 
 isNatural :: Rational -> Bool
-isNatural = (==1) . denominator
+isNatural = (== 1) . denominator
 
 operators :: [String]
-operators = ["+","-","*","/"]
+operators = ["+", "-", "*", "/"]
 
 permute :: Int -> [a] -> [[a]]
 permute 0 _ = [[]]
@@ -38,7 +41,7 @@ permute n xs = (:) <$> xs <*> permute (n - 1) xs
 insList :: [a] -> [a] -> [a]
 insList [] ys = ys
 insList xs [] = xs
-insList (x:xs) (y:ys) = x:y:insList xs ys
+insList (x : xs) (y : ys) = x : y : insList xs ys
 
 mkExprStr :: [String] -> [String]
 mkExprStr xs = map f ops
@@ -81,4 +84,3 @@ parse = fmap fst . runParser (expr <* eos)
 
 calculate :: String -> Maybe Rational
 calculate = fmap eval . parse
-
